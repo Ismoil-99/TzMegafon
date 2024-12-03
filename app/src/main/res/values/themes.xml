@@ -6,4 +6,11 @@
     </style>
 
     <style name="Theme.TzMegafon" parent="Base.Theme.TzMegafon" />
+
+    <style name="CustomChip" parent="Widget.MaterialComponents.Chip.Filter">
+        <item name="chipCornerRadius">10dp</item>
+        <item name="checkedIconTint">@color/black</item>
+        <item name="chipBackgroundColor">@android:color/transparent</item>
+        <item name="chipStrokeWidth">1dp</item>
+    </style>
 </resources>

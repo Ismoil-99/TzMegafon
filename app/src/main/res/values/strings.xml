@@ -19,4 +19,6 @@
     <string name="pick_galery">Выбрать из галерии</string>
     <string name="error_image">Фото не выбранно!</string>
     <string name="success">Добавленно новая задача!</string>
+    <string name="active_text">Активные</string>
+    <string name="success_text">Выполненые</string>
 </resources>

@@ -56,6 +56,15 @@ class AddTodoFragment : Fragment() {
         val listTodo = listOf("aктивна","выполнена")
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, listTodo)
         binding.statusTodo.setAdapter(adapter)
+        binding.statusTodo.setOnItemClickListener { adapterView, view, i, l ->
+            lifecycleScope.launch {
+                if (i == 0){
+                    statusTodo.emit(true)
+                }else if (i == 1 ){
+                    statusTodo.emit(false)
+                }
+            }
+        }
         binding.dateValue.setOnClickListener {
             val datePickerDialog = DatePickerDialog(
                 requireContext(), {DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->

@@ -38,7 +38,7 @@
         tools:text="asdfadasdas" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/status_order"
+        android:id="@+id/status_todo"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_alignTop="@+id/title_todo"
@@ -50,14 +50,14 @@
         android:textColor="#FFFFFF"
         android:textSize="9sp"
         android:visibility="visible"
-        tools:text="В процессе" />
+        tools:text="Выполненно" />
 
     <ImageView
         android:id="@+id/calendar_icon"
         android:layout_width="17dp"
         android:layout_height="17dp"
         android:layout_below="@+id/desc_todo"
-        android:layout_alignStart="@+id/status_order"
+        android:layout_alignStart="@+id/status_todo"
         android:src="@drawable/baseline_calendar_month" />
 
     <TextView

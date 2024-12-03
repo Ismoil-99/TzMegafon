@@ -10,4 +10,7 @@ class RepositoryTodo @Inject constructor (private val todoQuery: TodoQuery) {
 
     suspend fun insertMedicine(todoModel: TodoModel) = todoQuery.insertTodo(todoModel)
 
+    suspend fun deleteTodo(todoModel: TodoModel) = todoQuery.deleteTodo(todoModel)
+
+    fun getActiveTodo(active:Int) = todoQuery.getActiveTodo(active)
 }

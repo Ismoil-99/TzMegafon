@@ -39,8 +39,8 @@
 
                 <ImageView
                     android:id="@+id/icon_todo"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
                     android:src="@drawable/baseline_camera_alt_24" />
