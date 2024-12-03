@@ -1,9 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TzMegafon</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">Список задач</string>
-    <string name="second_fragment_label">Добавление задач</string>
     <string name="name_todo">Название</string>
     <string name="desc_todo">Описание</string>
     <string name="date_todo">Дата</string>
