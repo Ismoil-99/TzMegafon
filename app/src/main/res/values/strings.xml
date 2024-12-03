@@ -12,4 +12,11 @@
     <string name="upload_file_text">Прикрепить файл</string>
     <string name="photo">Фото</string>
     <string name="add_todo">Сохранить</string>
+    <string name="error_name">Название не должно быть пустым!</string>
+    <string name="error_desc">Описание не должно быть пустым!</string>
+    <string name="error_data">Дата не выбранна!</string>
+    <string name="pick_photo">Сделать фото</string>
+    <string name="pick_galery">Выбрать из галерии</string>
+    <string name="error_image">Фото не выбранно!</string>
+    <string name="success">Добавленно новая задача!</string>
 </resources>

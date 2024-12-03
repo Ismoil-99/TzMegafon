@@ -17,9 +17,9 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.example.tzmegafon.ui.screens.edit.EditFragment"
+        android:name="com.example.tzmegafon.ui.screens.addtodo.AddTodoFragment"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_edit">
+        tools:layout="@layout/fragment_add_todo">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
