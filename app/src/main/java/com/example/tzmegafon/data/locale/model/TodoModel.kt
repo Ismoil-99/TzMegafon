@@ -19,4 +19,8 @@ data class TodoModel(
     val activeTodo:Boolean,
     @ColumnInfo(name = "pathImage")
     val pathImageTodo:String,
+    @ColumnInfo(name = "audioPath")
+    val audioPathTodo:String,
+    @ColumnInfo("audioName")
+    val audioNameTodo:String
     )

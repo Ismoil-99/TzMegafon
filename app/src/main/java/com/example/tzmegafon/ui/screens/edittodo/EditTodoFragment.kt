@@ -1,8 +1,12 @@
 package com.example.tzmegafon.ui.screens.edittodo
 
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.ContentValues.TAG
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -12,6 +16,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -47,6 +53,8 @@ class EditTodoFragment : Fragment() {
     private var statusTodo = MutableStateFlow<Boolean>(false)
     private var imageTodo = MutableStateFlow<String>("")
     private val calendar = Calendar.getInstance()
+    private var audioTodoPath = MutableStateFlow<String>("")
+    private var audioTodoName = MutableStateFlow<String>("")
 
 
     override fun onCreateView(
@@ -108,7 +116,9 @@ class EditTodoFragment : Fragment() {
                         descTodo = binding.descTextValue.text.toString(),
                         dateTodo = dataTodo.value,
                         activeTodo = statusTodo.value,
-                        pathImageTodo = imageTodo.value
+                        pathImageTodo = imageTodo.value,
+                        audioPathTodo = audioTodoPath.value ?: "",
+                        audioNameTodo = audioTodoName.value ?: ""
                     )
                     viewModel.updateTodo (
                         todo
@@ -130,6 +140,35 @@ class EditTodoFragment : Fragment() {
             }
             dialog.show(requireActivity().supportFragmentManager, "SELECTIMAGE")
         }
+        binding.deleteAudio.setOnClickListener {
+            lifecycleScope.launch {
+                audioTodoName.emit("")
+                audioTodoPath.emit("")
+            }
+        }
+        binding.audioFileBox.setOnClickListener {
+            val audio = Intent()
+            audio.setType("audio/*")
+            audio.setAction(Intent.ACTION_OPEN_DOCUMENT)
+            startForResult.launch(audio)
+        }
+        lifecycleScope.launch {
+            audioTodoName.collectLatest {
+                if (it.isNotEmpty()){
+                    binding.iconUpload.visibility = View.GONE
+                    binding.uploadText.visibility = View.GONE
+                    binding.mucisFile.visibility = View.VISIBLE
+                    binding.nameMusic.visibility = View.VISIBLE
+                    binding.deleteAudio.visibility = View.VISIBLE
+                }else{
+                    binding.iconUpload.visibility = View.VISIBLE
+                    binding.uploadText.visibility = View.VISIBLE
+                    binding.mucisFile.visibility = View.GONE
+                    binding.nameMusic.visibility = View.GONE
+                    binding.deleteAudio.visibility = View.GONE
+                }
+            }
+        }
         viewModel.getTodobyId(args.id).observe(viewLifecycleOwner){ todo ->
             Glide.with(requireContext())
                 .load(Uri.parse(todo.pathImageTodo))
@@ -137,6 +176,7 @@ class EditTodoFragment : Fragment() {
             binding.nameTodo.setText(todo.nameTodo)
             binding.descTextValue.setText(todo.descTodo)
             binding.dateValue.text = todo.dateTodo
+            binding.nameMusic.text = todo.audioNameTodo
             lifecycleScope.launch {
                 imageTodo.emit(todo.pathImageTodo)
                 dataTodo.emit(todo.dateTodo)
@@ -146,9 +186,35 @@ class EditTodoFragment : Fragment() {
                 }else{
                     binding.statusTodo.setText(adapter.getItem(1),false)
                 }
+                audioTodoName.emit(todo.audioNameTodo)
+                audioTodoPath.emit(todo.audioPathTodo)
             }
         }
 
+    }
+
+    val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val intent = result.data!!.data!!
+            var fileName: String? = null
+            if (intent.getScheme().equals("content")) {
+                requireActivity().contentResolver.query(intent, null, null, null, null, null).use { cursor ->
+                    if (cursor != null && cursor.moveToFirst()) {
+                        fileName = cursor.getString(
+                            cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME)
+                        )
+                        lifecycleScope.launch {
+                            audioTodoName.emit("$fileName")
+                            audioTodoPath.emit(intent.path ?: "")
+                        }
+                        binding.nameMusic.text = fileName
+                        Log.d(TAG, "Filename: $fileName")
+                        cursor.close()
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

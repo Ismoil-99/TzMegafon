@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
@@ -168,8 +169,9 @@
                 android:textSize="18sp" />
 
             <RelativeLayout
+                android:id="@+id/audio_file_box"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="140dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
@@ -180,17 +182,50 @@
                     android:id="@+id/icon_upload"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:visibility="visible"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/upload_file_svgrepo_com" />
 
                 <TextView
+                    android:id="@+id/upload_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/icon_upload"
                     android:layout_centerHorizontal="true"
+                    android:visibility="visible"
                     android:text="@string/upload_file_text"
                     android:textSize="11sp" />
+
+
+                <ImageView
+                    android:id="@+id/mucis_file"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:visibility="gone"
+                    android:layout_marginTop="-10dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/baseline_music_note"
+                    />
+
+                <TextView
+                    android:id="@+id/name_music"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/mucis_file"
+                    android:visibility="gone"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="12sp"
+                    tools:text="asdasddfadsfdsfaasdasdafaf.mp3" />
+
+                <ImageView
+                    android:id="@+id/delete_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/mucis_file"
+                    android:visibility="gone"
+                    android:layout_alignEnd="@+id/name_music"
+                    android:src="@drawable/baseline_close" />
             </RelativeLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

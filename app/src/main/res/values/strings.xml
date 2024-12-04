@@ -8,8 +8,8 @@
     <string name="desc_todo">Описание</string>
     <string name="date_todo">Дата</string>
     <string name="status_todo">Статус</string>
-    <string name="attach_file_todo">Прикрепить файл</string>
-    <string name="upload_file_text">Прикрепить файл</string>
+    <string name="attach_file_todo">Прикрепить аудио</string>
+    <string name="upload_file_text">Прикрепить аудио</string>
     <string name="photo">Фото</string>
     <string name="add_todo">Сохранить</string>
     <string name="error_name">Название не должно быть пустым!</string>
@@ -21,4 +21,5 @@
     <string name="success">Добавленно новая задача!</string>
     <string name="active_text">Активные</string>
     <string name="success_text">Выполненые</string>
+    <string name="edit_todo">Изменить</string>
 </resources>

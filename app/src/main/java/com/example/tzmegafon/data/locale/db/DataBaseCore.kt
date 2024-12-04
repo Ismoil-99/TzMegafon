@@ -8,7 +8,7 @@ import com.example.tzmegafon.data.locale.model.TodoModel
 import com.example.tzmegafon.data.locale.query.TodoQuery
 
 @Database(entities = [TodoModel::class,
-], version = 1, exportSchema = false)
+], version = 2, exportSchema = false)
 abstract class DataBaseCore : RoomDatabase() {
 
     abstract fun saveTodo(): TodoQuery

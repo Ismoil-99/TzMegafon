@@ -5,7 +5,7 @@
     <string name="date_todo">Дата</string>
     <string name="status_todo">Статус</string>
     <string name="attach_file_todo">Прикрепить файл</string>
-    <string name="upload_file_text">Прикрепить файл</string>
+    <string name="upload_file_text">Прикрепить аудио</string>
     <string name="photo">Фото</string>
     <string name="add_todo">Сохранить</string>
     <string name="error_name">Название не должно быть пустым!</string>

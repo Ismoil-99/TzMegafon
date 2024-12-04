@@ -34,6 +34,9 @@ class ListTodoAdapter(private val onItemClicked: (Int) -> Unit,
                     binding.statusTodo.setBackgroundColor(
                         ContextCompat.getColor(root.context.applicationContext,
                             R.color.green))}
+                if (todoModel.audioNameTodo.isNotEmpty()){
+                    binding.iconMusicTodo.visibility = View.VISIBLE
+                }
                 }
                 Glide.with(binding.root.context)
                     .load(Uri.parse(todoModel.pathImageTodo))
