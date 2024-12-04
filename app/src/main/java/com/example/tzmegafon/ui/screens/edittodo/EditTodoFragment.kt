@@ -137,10 +137,15 @@ class EditTodoFragment : Fragment() {
             binding.nameTodo.setText(todo.nameTodo)
             binding.descTextValue.setText(todo.descTodo)
             binding.dateValue.text = todo.dateTodo
-            if (todo.activeTodo){
-                binding.statusTodo.setText(adapter.getItem(0),false)
-            }else{
-                binding.statusTodo.setText(adapter.getItem(1),false)
+            lifecycleScope.launch {
+                imageTodo.emit(todo.pathImageTodo)
+                dataTodo.emit(todo.dateTodo)
+                statusTodo.emit(todo.activeTodo)
+                if (todo.activeTodo){
+                    binding.statusTodo.setText(adapter.getItem(0),false)
+                }else{
+                    binding.statusTodo.setText(adapter.getItem(1),false)
+                }
             }
         }
 
