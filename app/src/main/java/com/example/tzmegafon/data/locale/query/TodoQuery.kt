@@ -6,6 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.tzmegafon.data.locale.model.TodoModel
 
 @Dao
@@ -22,4 +23,9 @@ interface TodoQuery {
     @Query("Select * from todo where active = :active")
     fun getActiveTodo(active: Int) : LiveData<MutableList<TodoModel>>
 
+    @Query("Select * from todo where id = :id")
+    fun getTodobyId(id: Int) : LiveData<TodoModel>
+
+    @Update()
+    fun updateTodo(todoModel: TodoModel)
 }

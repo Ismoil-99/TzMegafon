@@ -1,6 +1,7 @@
-package com.example.tzmegafon.ui.screens.addtodo
+package com.example.tzmegafon.ui.screens.edittodo
 
 import android.app.DatePickerDialog
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,11 +15,16 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.tzmegafon.R
 import com.example.tzmegafon.data.locale.model.TodoModel
 import com.example.tzmegafon.databinding.FragmentAddTodoBinding
+import com.example.tzmegafon.databinding.FragmentEditTodoBinding
+import com.example.tzmegafon.ui.screens.addtodo.UploadImageDialog
 import com.example.tzmegafon.ui.screens.addtodo.viewmodel.AddTodoViewModel
+import com.example.tzmegafon.ui.screens.edittodo.viewmodel.EditTodoViewModel
+import com.example.tzmegafon.ui.screens.main.viewmodel.MainTodoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -30,23 +36,25 @@ import java.util.Locale
 
 
 @AndroidEntryPoint
-class AddTodoFragment : Fragment() {
+class EditTodoFragment : Fragment() {
 
-    private var _binding: FragmentAddTodoBinding? = null
+    private var _binding: FragmentEditTodoBinding? = null
 
     private val binding get() = _binding!!
-    private val viewModel : AddTodoViewModel by viewModels()
+    private val args: EditTodoFragmentArgs by navArgs()
+    private val viewModel : EditTodoViewModel by viewModels()
     private var dataTodo = MutableStateFlow<String>("")
     private var statusTodo = MutableStateFlow<Boolean>(false)
     private var imageTodo = MutableStateFlow<String>("")
     private val calendar = Calendar.getInstance()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentAddTodoBinding.inflate(inflater, container, false)
+        _binding = FragmentEditTodoBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -95,18 +103,18 @@ class AddTodoFragment : Fragment() {
             }else{
                 lifecycleScope.launch {
                     val todo = TodoModel(
-                        id = 0,
+                        id = args.id,
                         nameTodo = binding.nameTodo.text.toString(),
                         descTodo = binding.descTextValue.text.toString(),
                         dateTodo = dataTodo.value,
                         activeTodo = statusTodo.value,
                         pathImageTodo = imageTodo.value
                     )
-                    viewModel.insertTodo(
+                    viewModel.updateTodo (
                         todo
                     )
                     findNavController().navigateUp()
-                    Toast.makeText(requireContext(),R.string.success,Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(requireContext(),R.string.success,Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -122,6 +130,20 @@ class AddTodoFragment : Fragment() {
             }
             dialog.show(requireActivity().supportFragmentManager, "SELECTIMAGE")
         }
+        viewModel.getTodobyId(args.id).observe(viewLifecycleOwner){ todo ->
+            Glide.with(requireContext())
+                .load(Uri.parse(todo.pathImageTodo))
+                .into(binding.iconTodo)
+            binding.nameTodo.setText(todo.nameTodo)
+            binding.descTextValue.setText(todo.descTodo)
+            binding.dateValue.text = todo.dateTodo
+            if (todo.activeTodo){
+                binding.statusTodo.setText(adapter.getItem(0),false)
+            }else{
+                binding.statusTodo.setText(adapter.getItem(1),false)
+            }
+        }
+
     }
 
     override fun onDestroyView() {

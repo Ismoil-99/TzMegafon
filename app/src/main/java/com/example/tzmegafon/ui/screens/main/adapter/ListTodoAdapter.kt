@@ -13,7 +13,7 @@ import com.example.tzmegafon.R
 import com.example.tzmegafon.data.locale.model.TodoModel
 import com.example.tzmegafon.databinding.ListTodoBinding
 
-class ListTodoAdapter(private val onItemClicked: (String) -> Unit,
+class ListTodoAdapter(private val onItemClicked: (Int) -> Unit,
 ): RecyclerView.Adapter<ListTodoAdapter.HistoryViewHolder>() {
 
 
@@ -39,9 +39,10 @@ class ListTodoAdapter(private val onItemClicked: (String) -> Unit,
                     .load(Uri.parse(todoModel.pathImageTodo))
                     .circleCrop()
                     .into(binding.imageTodo)
-
+            binding.root.setOnClickListener {
+                onItemClicked.invoke(todoModel.id)
             }
-
+            }
         }
     private  val differCallback = object  : DiffUtil.ItemCallback<TodoModel>(){
         override fun areItemsTheSame(oldItem: TodoModel, newItem: TodoModel): Boolean {

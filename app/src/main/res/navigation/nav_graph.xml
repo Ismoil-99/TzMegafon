@@ -3,26 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/MainFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
+        android:id="@+id/MainFragment"
         android:name="com.example.tzmegafon.ui.screens.main.MainFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_main">
 
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
+        android:id="@+id/AddTodoFragment"
         android:name="com.example.tzmegafon.ui.screens.addtodo.AddTodoFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_add_todo">
-
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/editTodoFragment"
+        android:name="com.example.tzmegafon.ui.screens.edittodo.EditTodoFragment"
+        android:label=""
+        tools:layout="@layout/fragment_edit_todo"
+        >
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </fragment>
+    <action
+        android:id="@+id/to_add_todo"
+        app:destination="@+id/AddTodoFragment"
+        />
+    <action
+        android:id="@+id/to_edit"
+        app:destination="@+id/editTodoFragment"
+        />
 </navigation>

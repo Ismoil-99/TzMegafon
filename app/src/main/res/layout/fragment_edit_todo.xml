@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/add_todo">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/photo_todo_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/photo"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <FrameLayout
+                android:id="@+id/save_image"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/line_black">
+
+                <ImageView
+                    android:id="@+id/icon_todo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/baseline_camera_alt_24" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/todo_label_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/name_todo"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/box_name_todo"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:hint="@string/name_todo">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/name_todo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/desc_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="17dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/desc_todo"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/box_desc_todo"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:hint="@string/desc_todo">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/desc_text_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="17dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/date_todo"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/line_black"
+                android:layout_marginStart="20dp"
+                >
+                <TextView
+                    android:id="@+id/date_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:text="дд.мм.г"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+            </FrameLayout>
+
+
+
+            <TextView
+                android:id="@+id/status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="17dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/status_todo"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/box_status_todo"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/status_todo"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:text="@string/status_todo" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/attach_file_todo_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="17dp"
+                android:layout_marginBottom="5dp"
+                android:text="@string/attach_file_todo"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/dash_gap"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/icon_upload"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/upload_file_svgrepo_com" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/icon_upload"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/upload_file_text"
+                    android:textSize="11sp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/add_todo"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/add_todo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

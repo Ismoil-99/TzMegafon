@@ -16,9 +16,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tzmegafon.R
 import com.example.tzmegafon.data.locale.model.TodoModel
 import com.example.tzmegafon.databinding.FragmentMainBinding
+import com.example.tzmegafon.ui.screens.edittodo.EditTodoFragmentDirections
 import com.example.tzmegafon.ui.screens.main.adapter.ListTodoAdapter
 import com.example.tzmegafon.ui.screens.main.viewmodel.MainTodoViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
@@ -29,6 +33,7 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel : MainTodoViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
+    private var items = MutableStateFlow<List<TodoModel>>(emptyList())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,19 +49,32 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.addTodo.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+            findNavController().navigate(R.id.to_add_todo)
+            binding.activeTodo.isChecked = false
+            binding.successActive.isChecked = false
+
+        }
+        viewModel.getAllTodo().observe(viewLifecycleOwner){
+            lifecycleScope.launch {
+                items.emit(it)
+            }
         }
         setupAdapter()
     }
     @SuppressLint("NotifyDataSetChanged")
     private fun setupAdapter() {
         recyclerView = binding.todoList
-        val adapter = ListTodoAdapter(){
+        val adapter = ListTodoAdapter(){ id ->
+
+            val destination = EditTodoFragmentDirections.toEdit(id)
+            findNavController().navigate(destination)
+            binding.activeTodo.isChecked = false
+            binding.successActive.isChecked = false
+
         }
         recyclerView.adapter = adapter
         binding.todoList.layoutManager = LinearLayoutManager(requireContext(),
             RecyclerView.VERTICAL,false)
-        recyclerView.setHasFixedSize(true)
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -77,14 +95,15 @@ class MainFragment : Fragment() {
         binding.activeTodo.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
                 viewModel.activeTodo(1).observe(viewLifecycleOwner){
-                    Log.d("value","$it")
-                    adapter.notifyDataSetChanged()
-                    adapter.differ.submitList(it)
+                    lifecycleScope.launch {
+                        items.emit(it)
+                    }
                 }
             }else{
                 viewModel.getAllTodo().observe(viewLifecycleOwner) { todo ->
-                    adapter.notifyDataSetChanged()
-                    adapter.differ.submitList(todo)
+                    lifecycleScope.launch {
+                        items.emit(todo)
+                    }
                 }
             }
 
@@ -92,25 +111,24 @@ class MainFragment : Fragment() {
         binding.successActive.setOnCheckedChangeListener { compoundButton, b ->
             if (b){
                 viewModel.activeTodo(0).observe(viewLifecycleOwner){
-                    Log.d("value","$it")
-                    adapter.notifyDataSetChanged()
-                    adapter.differ.submitList(it)
+                    lifecycleScope.launch {
+                        items.emit(it)
+                    }
                 }
             }else{
                 viewModel.getAllTodo().observe(viewLifecycleOwner) { todo ->
-                    adapter.notifyDataSetChanged()
-                    adapter.differ.submitList(todo)
+                    lifecycleScope.launch {
+                        items.emit(todo)
+                    }
                 }
             }
 
         }
-        if (binding.successActive.isChecked){
-            Log.d("value","true")
-        }else{
-            viewModel.getAllTodo().observe(viewLifecycleOwner) { todo ->
-                adapter.notifyDataSetChanged()
-                adapter.differ.submitList(todo)
-            }
+
+        lifecycleScope.launch {
+           items.collectLatest {
+               adapter.differ.submitList(it)
+           }
         }
     }
     override fun onDestroyView() {
