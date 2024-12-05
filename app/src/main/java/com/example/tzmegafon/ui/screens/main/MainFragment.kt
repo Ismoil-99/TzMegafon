@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tzmegafon.App
 import com.example.tzmegafon.R
 import com.example.tzmegafon.data.locale.model.TodoModel
 import com.example.tzmegafon.databinding.FragmentMainBinding
@@ -35,6 +36,7 @@ class MainFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private var items = MutableStateFlow<List<TodoModel>>(emptyList())
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,6 +49,16 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val status = App.sharedPreferences.getString("SAVESTATUS","0")
+        Log.d("value","$status")
+        if (status == "0"){
+            lifecycleScope.launch {
+                viewModel.getTodo().collectLatest {
+
+                }
+            }
+        }
+
 
         binding.addTodo.setOnClickListener {
             findNavController().navigate(R.id.to_add_todo)

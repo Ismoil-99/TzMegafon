@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.tzmegafon.data.locale.model.TodoModel
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TodoQuery {
