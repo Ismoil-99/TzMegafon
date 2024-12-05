@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tzmegafon.App
 import com.example.tzmegafon.R
 import com.example.tzmegafon.data.locale.model.TodoModel
+import com.example.tzmegafon.data.remote.model.UIState
 import com.example.tzmegafon.databinding.FragmentMainBinding
 import com.example.tzmegafon.ui.screens.edittodo.EditTodoFragmentDirections
 import com.example.tzmegafon.ui.screens.main.adapter.ListTodoAdapter
@@ -53,8 +55,21 @@ class MainFragment : Fragment() {
         Log.d("value","$status")
         if (status == "0"){
             lifecycleScope.launch {
-                viewModel.getTodo().collectLatest {
-
+                viewModel.getTodo().collectLatest { todo ->
+                    when(todo){
+                        is UIState.Loading -> {
+                            binding.loading.visibility = View.VISIBLE
+                            binding.todoList.visibility = View.GONE
+                            Log.d("value","yes")
+                        }
+                        is UIState.Success -> {
+                            binding.loading.visibility = View.GONE
+                            binding.todoList.visibility = View.VISIBLE
+                            Log.d("value","no")
+                            Toast.makeText(requireContext(),getString(R.string.success_data),Toast.LENGTH_SHORT).show()
+                        }
+                        is UIState.Error -> {}
+                    }
                 }
             }
         }

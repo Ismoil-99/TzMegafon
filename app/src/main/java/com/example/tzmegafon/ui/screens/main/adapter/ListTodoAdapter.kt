@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.tzmegafon.R
 import com.example.tzmegafon.data.locale.model.TodoModel
 import com.example.tzmegafon.databinding.ListTodoBinding
@@ -40,7 +41,8 @@ class ListTodoAdapter(private val onItemClicked: (Int) -> Unit,
                 }
                 Glide.with(binding.root.context)
                     .load(Uri.parse(todoModel.pathImageTodo))
-                    .circleCrop()
+                    .transform(RoundedCorners(10))
+                    .placeholder(R.drawable.baseline_insert_photo)
                     .into(binding.imageTodo)
             binding.root.setOnClickListener {
                 onItemClicked.invoke(todoModel.id)

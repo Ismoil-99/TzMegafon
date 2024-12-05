@@ -7,7 +7,9 @@ import com.example.tzmegafon.data.locale.model.TodoModel
 import com.example.tzmegafon.data.locale.query.TodoQuery
 import com.example.tzmegafon.data.locale.repositorydb.RepositoryTodo
 import com.example.tzmegafon.data.remote.model.TodoModelRemote
+import com.example.tzmegafon.data.remote.model.UIState
 import com.example.tzmegafon.data.remote.requests.TodoRequest
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -21,12 +23,15 @@ class TodoRepositoryImpl @Inject constructor(
 ) : TodoRepository {
 
     private val saveStatus = App.sharedPreferencesEditor
-    override fun getTodo(): Flow<List<TodoModelRemote>> {
+    override fun getTodo(): Flow<UIState<List<TodoModelRemote>>> {
         return flow {
+            emit(UIState.Loading())
+            delay(1000)
             try {
                 val response = todoRequest.getTodo()
                 if (response.isSuccessful) {
                     if (response.body() != null && response.code() == 200) {
+                        emit(UIState.Success(data = response.body()!!))
                                 response!!.body()!!.map {
                                     repositoryTodo.insertMedicine(
                                         TodoModel(
@@ -36,8 +41,8 @@ class TodoRepositoryImpl @Inject constructor(
                                             it.date,
                                             it.active,
                                             it.pathImage,
-                                            it.audioPath,
-                                            it.audioName
+                                            "",
+                                            ""
                                         )
                                     )
                                 }

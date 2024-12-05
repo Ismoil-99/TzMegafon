@@ -28,6 +28,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="5dp"
                 android:text="@string/photo"
+                android:fontFamily="@font/alice"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -55,6 +56,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="5dp"
                 android:text="@string/name_todo"
+                android:fontFamily="@font/alice"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -81,6 +83,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="17dp"
                 android:layout_marginBottom="5dp"
+                android:fontFamily="@font/alice"
                 android:text="@string/desc_todo"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
@@ -107,6 +110,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="17dp"
                 android:layout_marginBottom="5dp"
+                android:fontFamily="@font/alice"
                 android:text="@string/date_todo"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
@@ -124,6 +128,7 @@
                     android:layout_height="wrap_content"
                     android:padding="15dp"
                     android:text="дд.мм.г"
+                    android:fontFamily="@font/alice"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
             </FrameLayout>
@@ -136,6 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="17dp"
+                android:fontFamily="@font/alice"
                 android:layout_marginBottom="5dp"
                 android:text="@string/status_todo"
                 android:textColor="@color/black"
@@ -164,6 +170,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="17dp"
                 android:layout_marginBottom="5dp"
+                android:fontFamily="@font/alice"
                 android:text="@string/attach_file_todo"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
@@ -192,6 +199,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/icon_upload"
                     android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/alice"
                     android:text="@string/upload_file_text"
                     android:textSize="11sp" />
                 <ImageView
@@ -212,6 +220,7 @@
                     android:visibility="gone"
                     android:layout_centerHorizontal="true"
                     android:textSize="12sp"
+                    android:fontFamily="@font/alice"
                     tools:text="asdasddfadsfdsfaasdasdafaf.mp3" />
 
                 <ImageView
@@ -233,6 +242,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="10dp"
+        android:fontFamily="@font/alice"
         android:text="@string/edit_todo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

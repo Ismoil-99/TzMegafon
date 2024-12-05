@@ -22,4 +22,5 @@
     <string name="active_text">Активные</string>
     <string name="success_text">Выполненые</string>
     <string name="edit_todo">Изменить</string>
+    <string name="success_data">Данные загружены!</string>
 </resources>

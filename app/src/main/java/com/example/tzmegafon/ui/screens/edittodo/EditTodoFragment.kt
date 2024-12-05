@@ -172,6 +172,7 @@ class EditTodoFragment : Fragment() {
         viewModel.getTodobyId(args.id).observe(viewLifecycleOwner){ todo ->
             Glide.with(requireContext())
                 .load(Uri.parse(todo.pathImageTodo))
+                .placeholder(R.drawable.baseline_insert_photo)
                 .into(binding.iconTodo)
             binding.nameTodo.setText(todo.nameTodo)
             binding.descTextValue.setText(todo.descTodo)
