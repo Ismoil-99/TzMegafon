@@ -211,7 +211,7 @@
                     android:visibility="gone"
                     android:layout_marginTop="-10dp"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/baseline_music_note"
+                    android:src="@drawable/baseline_attach_file"
                     />
 
                 <TextView

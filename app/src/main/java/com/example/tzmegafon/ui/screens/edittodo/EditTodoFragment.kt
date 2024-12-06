@@ -27,10 +27,12 @@ import com.example.tzmegafon.R
 import com.example.tzmegafon.data.locale.model.TodoModel
 import com.example.tzmegafon.databinding.FragmentAddTodoBinding
 import com.example.tzmegafon.databinding.FragmentEditTodoBinding
+import com.example.tzmegafon.ui.extension.convertFile
 import com.example.tzmegafon.ui.screens.addtodo.UploadImageDialog
 import com.example.tzmegafon.ui.screens.addtodo.viewmodel.AddTodoViewModel
 import com.example.tzmegafon.ui.screens.edittodo.viewmodel.EditTodoViewModel
 import com.example.tzmegafon.ui.screens.main.viewmodel.MainTodoViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -124,7 +126,6 @@ class EditTodoFragment : Fragment() {
                         todo
                     )
                     findNavController().navigateUp()
-                    //Toast.makeText(requireContext(),R.string.success,Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -148,7 +149,7 @@ class EditTodoFragment : Fragment() {
         }
         binding.audioFileBox.setOnClickListener {
             val audio = Intent()
-            audio.setType("audio/*")
+            audio.setType("application/*")
             audio.setAction(Intent.ACTION_OPEN_DOCUMENT)
             startForResult.launch(audio)
         }
@@ -205,12 +206,24 @@ class EditTodoFragment : Fragment() {
                         fileName = cursor.getString(
                             cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME)
                         )
-                        lifecycleScope.launch {
-                            audioTodoName.emit("$fileName")
-                            audioTodoPath.emit(intent.path ?: "")
+                        val size = convertFile(cursor,)
+                        if (size <= 5000){
+                            lifecycleScope.launch {
+                                audioTodoName.emit("$fileName")
+                                audioTodoPath.emit(intent.path ?: "")
+                            }
+                            binding.nameMusic.text = fileName
+                        }else{
+                            MaterialAlertDialogBuilder(requireContext())
+                                .setTitle(resources.getString(R.string.title))
+                                .setMessage(resources.getString(R.string.supporting_text))
+                                .setNegativeButton("") { dialog, which ->
+
+                                }
+                                .setPositiveButton(resources.getString(R.string.accept)) { dialog, which ->
+                                }
+                                .show()
                         }
-                        binding.nameMusic.text = fileName
-                        Log.d(TAG, "Filename: $fileName")
                         cursor.close()
                     }
                 }

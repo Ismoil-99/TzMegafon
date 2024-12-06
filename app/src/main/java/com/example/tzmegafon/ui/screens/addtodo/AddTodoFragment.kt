@@ -6,6 +6,7 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.text.format.Formatter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +23,9 @@ import com.bumptech.glide.Glide
 import com.example.tzmegafon.R
 import com.example.tzmegafon.data.locale.model.TodoModel
 import com.example.tzmegafon.databinding.FragmentAddTodoBinding
+import com.example.tzmegafon.ui.extension.convertFile
 import com.example.tzmegafon.ui.screens.addtodo.viewmodel.AddTodoViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -131,7 +134,7 @@ class AddTodoFragment : Fragment() {
         }
         binding.audioFileBox.setOnClickListener {
             val audio = Intent()
-            audio.setType("audio/*")
+            audio.setType("application/*")
             audio.setAction(Intent.ACTION_OPEN_DOCUMENT)
             startForResult.launch(audio)
         }
@@ -170,12 +173,25 @@ class AddTodoFragment : Fragment() {
                         fileName = cursor.getString(
                             cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME)
                         )
-                        lifecycleScope.launch {
-                            audioTodoName.emit("$fileName")
-                            audioTodoPath.emit(intent.path ?: "")
+                        val size = convertFile(cursor,)
+                        if (size <= 5000){
+                            Log.d("value","$size")
+                            lifecycleScope.launch {
+                                audioTodoName.emit("$fileName")
+                                audioTodoPath.emit(intent.path ?: "")
+                            }
+                            binding.nameMusic.text = fileName
+                        }else{
+                            Log.d("value","$size")
+                            MaterialAlertDialogBuilder(requireContext())
+                                .setTitle(resources.getString(R.string.title))
+                                .setMessage(resources.getString(R.string.supporting_text))
+                                .setNegativeButton("") { dialog, which ->
+                                }
+                                .setPositiveButton(resources.getString(R.string.accept)) { dialog, which ->
+                                }
+                                .show()
                         }
-                        binding.nameMusic.text = fileName
-                        Log.d(TAG, "Filename: $fileName")
                         cursor.close()
                     }
                 }

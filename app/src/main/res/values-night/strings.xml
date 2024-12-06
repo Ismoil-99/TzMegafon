@@ -16,4 +16,7 @@
     <string name="error_image">Фото не выбранно!</string>
     <string name="success">Добавленно новая задача!</string>
     <string name="success_data">Данные загружены!</string>
+    <string name="title">Ощибка</string>
+    <string name="accept">Ок</string>
+    <string name="supporting_text">Размер файла не должен превышать 5 мб!</string>
 </resources>
