@@ -175,14 +175,12 @@ class AddTodoFragment : Fragment() {
                         )
                         val size = convertFile(cursor,)
                         if (size <= 5000){
-                            Log.d("value","$size")
                             lifecycleScope.launch {
                                 audioTodoName.emit("$fileName")
                                 audioTodoPath.emit(intent.path ?: "")
                             }
                             binding.nameMusic.text = fileName
                         }else{
-                            Log.d("value","$size")
                             MaterialAlertDialogBuilder(requireContext())
                                 .setTitle(resources.getString(R.string.title))
                                 .setMessage(resources.getString(R.string.supporting_text))
