@@ -19,4 +19,6 @@
     <string name="title">Ощибка</string>
     <string name="accept">Ок</string>
     <string name="supporting_text">Размер файла не должен превышать 5 мб!</string>
+    <string name="filter_text">фильтр</string>
+    <string name="not_todo">нет задач!</string>
 </resources>

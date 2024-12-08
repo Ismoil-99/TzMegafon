@@ -1,6 +1,5 @@
 package com.example.tzmegafon.ui.screens.main
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -21,6 +21,7 @@ import com.example.tzmegafon.data.remote.model.UIState
 import com.example.tzmegafon.databinding.FragmentMainBinding
 import com.example.tzmegafon.ui.screens.edittodo.EditTodoFragmentDirections
 import com.example.tzmegafon.ui.screens.main.adapter.ListTodoAdapter
+import com.example.tzmegafon.ui.screens.main.filterbottom.FilterListDialog
 import com.example.tzmegafon.ui.screens.main.viewmodel.MainTodoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,11 +33,12 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainFragment : Fragment() {
 
-    private var _binding: FragmentMainBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentMainBinding
     private val viewModel : MainTodoViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
-    private var items = MutableStateFlow<List<TodoModel>>(emptyList())
+    private var idFilter = MutableLiveData(0)
+    private var filterTodos = mutableListOf<TodoModel>()
+    private var inc = 0
 
 
     override fun onCreateView(
@@ -44,7 +46,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentMainBinding.inflate(inflater, container, false)
+        binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -52,7 +54,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val status = App.sharedPreferences.getString("SAVESTATUS","0")
-        Log.d("value","$status")
+        val saveIdFilter = App.sharedPreferencesEditor
+        val deleleteFilter = App.sharedPreferences.edit()
         if (status == "0"){
             lifecycleScope.launch {
                 viewModel.getTodo().collectLatest { todo ->
@@ -60,12 +63,10 @@ class MainFragment : Fragment() {
                         is UIState.Loading -> {
                             binding.loading.visibility = View.VISIBLE
                             binding.todoList.visibility = View.GONE
-                            Log.d("value","yes")
                         }
                         is UIState.Success -> {
                             binding.loading.visibility = View.GONE
                             binding.todoList.visibility = View.VISIBLE
-                            Log.d("value","no")
                             Toast.makeText(requireContext(),getString(R.string.success_data),Toast.LENGTH_SHORT).show()
                         }
                         is UIState.Error -> {}
@@ -73,93 +74,101 @@ class MainFragment : Fragment() {
                 }
             }
         }
-
-
         binding.addTodo.setOnClickListener {
+            viewModel.sortTodo(-1)
             findNavController().navigate(R.id.to_add_todo)
-            binding.activeTodo.isChecked = false
-            binding.successActive.isChecked = false
-
         }
-        viewModel.getAllTodo().observe(viewLifecycleOwner){
-            lifecycleScope.launch {
-                items.emit(it)
+        viewModel.sortTodo(-1)
+        binding.filterBox.setOnClickListener {
+
+            val showFilter = FilterListDialog{ ids ,name ->
+                binding.nameSort.text = name
+                binding.iconSot.visibility = View.VISIBLE
+                binding.iconSotDown.visibility = View.GONE
+                lifecycleScope.launch {
+                    idFilter.postValue(ids)
+                }
+                if (ids == 1){
+                    viewModel.sortTodo(1)
+                }else if (ids == 2){
+                    viewModel.sortTodo(0)
+                }
+
+                saveIdFilter.putInt("ID",ids).apply()
             }
+            showFilter.show(requireActivity().supportFragmentManager, "SELECTIMAGE")
         }
-        setupAdapter()
-    }
-    @SuppressLint("NotifyDataSetChanged")
-    private fun setupAdapter() {
-        recyclerView = binding.todoList
-        val adapter = ListTodoAdapter(){ id ->
+        binding.iconSot.setOnClickListener {
+            deleleteFilter.remove("ID").apply()
+            lifecycleScope.launch {
+                idFilter.postValue(0)
+            }
+            binding.nameSort.text = "фильтр"
+            binding.iconSot.visibility = View.GONE
+            binding.iconSotDown.visibility = View.VISIBLE
+            viewModel.sortTodo(-1)
+        }
 
+        viewModel.sortTodo.observe(viewLifecycleOwner){
+
+                    setupAdapter(it)
+
+        }
+    }
+
+    private fun setupAdapter(todosList:List<TodoModel>,) {
+        filterTodos.clear()
+        for ((inc, list) in todosList.withIndex()){
+            filterTodos.add(
+                inc, TodoModel(
+                    id = list.id,
+                    nameTodo = list.nameTodo,
+                    descTodo = list.descTodo,
+                    dateTodo = list.dateTodo,
+                    activeTodo = list.activeTodo,
+                    pathImageTodo = list.pathImageTodo,
+                    audioPathTodo = list.audioPathTodo,
+                    audioNameTodo = list.audioNameTodo
+                )
+            )
+        }
+        recyclerView = binding.todoList
+        val adapter = ListTodoAdapter(filterTodos) { id ->
             val destination = EditTodoFragmentDirections.toEdit(id)
             findNavController().navigate(destination)
-            binding.activeTodo.isChecked = false
-            binding.successActive.isChecked = false
-
+            viewModel.sortTodo(-1)
         }
         recyclerView.adapter = adapter
-        binding.todoList.layoutManager = LinearLayoutManager(requireContext(),
-            RecyclerView.VERTICAL,false)
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        binding.todoList.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL,false)
+        adapter.submitList(filterTodos)
+        recyclerView.setHasFixedSize(true)
+        val swipe = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                return true
+                return false
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos = viewHolder.adapterPosition
-                val item =  adapter.differ.currentList[pos]
+                val item = filterTodos[pos]
                 lifecycleScope.launch {
                     viewModel.deleteTodo(item)
                 }
             }
-        }).attachToRecyclerView(binding.todoList)
-        binding.activeTodo.setOnCheckedChangeListener { compoundButton, b ->
-            if (b){
-                viewModel.activeTodo(1).observe(viewLifecycleOwner){
-                    lifecycleScope.launch {
-                        items.emit(it)
-                    }
-                }
-            }else{
-                viewModel.getAllTodo().observe(viewLifecycleOwner) { todo ->
-                    lifecycleScope.launch {
-                        items.emit(todo)
-                    }
-                }
-            }
-
-        }
-        binding.successActive.setOnCheckedChangeListener { compoundButton, b ->
-            if (b){
-                viewModel.activeTodo(0).observe(viewLifecycleOwner){
-                    lifecycleScope.launch {
-                        items.emit(it)
-                    }
-                }
-            }else{
-                viewModel.getAllTodo().observe(viewLifecycleOwner) { todo ->
-                    lifecycleScope.launch {
-                        items.emit(todo)
-                    }
-                }
-            }
-
-        }
-
-        lifecycleScope.launch {
-           items.collectLatest {
-               adapter.differ.submitList(it)
-           }
-        }
+        })
+        swipe.attachToRecyclerView(null)
+        swipe.attachToRecyclerView(binding.todoList)
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        val deleleteFilter = App.sharedPreferences.edit()
+        deleleteFilter.remove("ID").apply()
+        lifecycleScope.launch {
+            idFilter.postValue(0)
+        }
     }
 }

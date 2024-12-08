@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -14,8 +15,18 @@ import com.example.tzmegafon.R
 import com.example.tzmegafon.data.locale.model.TodoModel
 import com.example.tzmegafon.databinding.ListTodoBinding
 
-class ListTodoAdapter(private val onItemClicked: (Int) -> Unit,
-): RecyclerView.Adapter<ListTodoAdapter.HistoryViewHolder>() {
+class ListTodoAdapter(private val allTodos: MutableList<TodoModel>,private val onItemClicked: (Int) -> Unit,
+): ListAdapter<TodoModel,ListTodoAdapter.HistoryViewHolder>(FinishDiffUtil()) {
+
+    class FinishDiffUtil : DiffUtil.ItemCallback<TodoModel>(){
+        override fun areItemsTheSame(oldItem: TodoModel, newItem: TodoModel): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: TodoModel, newItem: TodoModel): Boolean {
+            return oldItem == newItem
+        }
+    }
 
 
     inner class HistoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -49,16 +60,7 @@ class ListTodoAdapter(private val onItemClicked: (Int) -> Unit,
             }
             }
         }
-    private  val differCallback = object  : DiffUtil.ItemCallback<TodoModel>(){
-        override fun areItemsTheSame(oldItem: TodoModel, newItem: TodoModel): Boolean {
-            return oldItem.pathImageTodo == newItem.pathImageTodo
-        }
 
-        override fun areContentsTheSame(oldItem: TodoModel, newItem: TodoModel): Boolean {
-            return  oldItem == newItem
-        }
-    }
-    val differ = AsyncListDiffer(this,differCallback)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         val layout = LayoutInflater
             .from(parent.context)
@@ -67,8 +69,9 @@ class ListTodoAdapter(private val onItemClicked: (Int) -> Unit,
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        val item = differ.currentList[position]
+        val item = allTodos[position]
         holder.bind(item)
     }
-    override fun getItemCount() = differ.currentList.size
+
+    override fun getItemCount(): Int = allTodos.size
 }
